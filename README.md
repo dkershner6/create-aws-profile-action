@@ -24,6 +24,10 @@ A GitHub action to setup an AWS profile on the file system.
 
 **Optional** The AWS session token
 
+### `awsConfigDir`
+
+**Optional** The directory/folder where the AWS files will be saved
+
 ## Example usage
 
 ```
@@ -34,6 +38,7 @@ with:
   key: xxx
   secret: xxx
   sessionToken: xxx
+  aws_config_dir: /path/to/my/.aws
 ```
 
 ## Credit

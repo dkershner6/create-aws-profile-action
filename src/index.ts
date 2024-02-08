@@ -10,15 +10,16 @@ const run = async (): Promise<void> => {
         const profile = core.getInput("profile") || "you forgot the profile";
         const region = core.getInput("region") || "us-whatevs-1";
         const token = core.getInput("sessionToken");
+        const awsConfigDir =
+            core.getInput("aws_config_dir") || `${os.homedir()}/.aws`;
 
         core.info(`Setting up profile ${profile} in region ${region}...`);
 
-        const awsDir = `${os.homedir()}/.aws`;
-        const credentials = `${awsDir}/credentials`;
-        const config = `${awsDir}/config`;
+        const credentials = `${awsConfigDir}/credentials`;
+        const config = `${awsConfigDir}/config`;
 
-        if (!fs.existsSync(awsDir)) {
-            fs.mkdirSync(awsDir);
+        if (!fs.existsSync(awsConfigDir)) {
+            fs.mkdirSync(awsConfigDir);
         }
 
         fs.appendFileSync(credentials, `[${profile}]\n`);

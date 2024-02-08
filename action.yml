@@ -6,6 +6,9 @@ runs:
   using: node20
   main: dist/index.js
 inputs:
+  awsConfigDir:
+    description: The directory/folder where the AWS files will be saved
+    required: false
   key:
     description: The AWS_ACCESS_KEY_ID
     required: true
