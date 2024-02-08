@@ -7,16 +7,24 @@
   "root": true,
   "plugins": [
     "@typescript-eslint",
-    "import"
+    "import",
+    "jest",
+    "sonarjs"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module",
-    "project": "./tsconfig.dev.json"
+    "project": "./tsconfig.json"
   },
   "extends": [
-    "plugin:import/typescript"
+    "plugin:import/typescript",
+    "plugin:prettier/recommended",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jest/recommended",
+    "plugin:sonarjs/recommended"
   ],
   "settings": {
     "import/parsers": {
@@ -28,7 +36,7 @@
     "import/resolver": {
       "node": {},
       "typescript": {
-        "project": "./tsconfig.dev.json",
+        "project": "./tsconfig.json",
         "alwaysTryTypes": true
       }
     }
@@ -43,102 +51,6 @@
     "!projenrc/**/*.ts"
   ],
   "rules": {
-    "indent": [
-      "off"
-    ],
-    "@typescript-eslint/indent": [
-      "error",
-      2
-    ],
-    "quotes": [
-      "error",
-      "single",
-      {
-        "avoidEscape": true
-      }
-    ],
-    "comma-dangle": [
-      "error",
-      "always-multiline"
-    ],
-    "comma-spacing": [
-      "error",
-      {
-        "before": false,
-        "after": true
-      }
-    ],
-    "no-multi-spaces": [
-      "error",
-      {
-        "ignoreEOLComments": false
-      }
-    ],
-    "array-bracket-spacing": [
-      "error",
-      "never"
-    ],
-    "array-bracket-newline": [
-      "error",
-      "consistent"
-    ],
-    "object-curly-spacing": [
-      "error",
-      "always"
-    ],
-    "object-curly-newline": [
-      "error",
-      {
-        "multiline": true,
-        "consistent": true
-      }
-    ],
-    "object-property-newline": [
-      "error",
-      {
-        "allowAllPropertiesOnSameLine": true
-      }
-    ],
-    "keyword-spacing": [
-      "error"
-    ],
-    "brace-style": [
-      "error",
-      "1tbs",
-      {
-        "allowSingleLine": true
-      }
-    ],
-    "space-before-blocks": [
-      "error"
-    ],
-    "curly": [
-      "error",
-      "multi-line",
-      "consistent"
-    ],
-    "@typescript-eslint/member-delimiter-style": [
-      "error"
-    ],
-    "semi": [
-      "error",
-      "always"
-    ],
-    "max-len": [
-      "error",
-      {
-        "code": 150,
-        "ignoreUrls": true,
-        "ignoreStrings": true,
-        "ignoreTemplateLiterals": true,
-        "ignoreComments": true,
-        "ignoreRegExpLiterals": true
-      }
-    ],
-    "quote-props": [
-      "error",
-      "consistent-as-needed"
-    ],
     "@typescript-eslint/no-require-imports": [
       "error"
     ],
@@ -148,6 +60,10 @@
         "devDependencies": [
           "**/test/**",
           "**/build-tools/**",
+          "src/**/__tests__/**/*",
+          "src/**/__mocks__/**/*",
+          "src/**/*.test.ts",
+          "src/**/*.spec.ts",
           ".projenrc.ts",
           "projenrc/**/*.ts"
         ],
@@ -155,15 +71,27 @@
         "peerDependencies": true
       }
     ],
-    "import/no-unresolved": [
-      "error"
-    ],
+    "import/no-unresolved": "off",
     "import/order": [
-      "warn",
+      "error",
       {
         "groups": [
           "builtin",
-          "external"
+          "external",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "newlines-between": "always",
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": [
+          "react"
         ],
         "alphabetize": {
           "order": "asc",
@@ -171,9 +99,7 @@
         }
       }
     ],
-    "no-duplicate-imports": [
-      "error"
-    ],
+    "no-duplicate-imports": "off",
     "no-shadow": [
       "off"
     ],
@@ -183,9 +109,7 @@
     "key-spacing": [
       "error"
     ],
-    "no-multiple-empty-lines": [
-      "error"
-    ],
+    "no-multiple-empty-lines": "off",
     "@typescript-eslint/no-floating-promises": [
       "error"
     ],
@@ -193,11 +117,10 @@
       "off"
     ],
     "@typescript-eslint/return-await": [
-      "error"
+      "error",
+      "always"
     ],
-    "no-trailing-spaces": [
-      "error"
-    ],
+    "no-trailing-spaces": "off",
     "dot-notation": [
       "error"
     ],
@@ -219,9 +142,72 @@
           "method"
         ]
       }
+    ],
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "debug",
+          "info",
+          "warn",
+          "error"
+        ]
+      }
+    ],
+    "import/namespace": "off",
+    "import/no-duplicates": "error",
+    "import/no-named-as-default": "error",
+    "import/no-named-as-default-member": "error",
+    "sonarjs/no-redundant-jump": "off",
+    "sonarjs/no-small-switch": "warn",
+    "@typescript-eslint/explicit-function-return-type": [
+      "error",
+      {
+        "allowExpressions": true,
+        "allowTypedFunctionExpressions": true,
+        "allowHigherOrderFunctions": true,
+        "allowDirectConstAssertionInArrowFunctions": true,
+        "allowConciseArrowFunctionExpressionsStartingWithVoid": true
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "ignoreRestSiblings": true
+      }
     ]
   },
   "overrides": [
+    {
+      "files": [
+        "*.ts",
+        "*.tsx"
+      ],
+      "excludedFiles": [
+        "**/app/**",
+        "**/app/**",
+        "**/pages/**",
+        "**/pages/**",
+        "**/.storybook/**",
+        "*.stories.ts",
+        "*.stories.tsx"
+      ],
+      "rules": {
+        "import/no-default-export": "warn"
+      }
+    },
+    {
+      "files": [
+        "*.js",
+        "*.jsx"
+      ],
+      "rules": {
+        "import/no-unresolved": "error",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    },
     {
       "files": [
         ".projenrc.ts"
