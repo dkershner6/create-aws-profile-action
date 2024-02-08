@@ -17,6 +17,11 @@ const project = new Node20GitHubActionTypescriptProject({
         name: "Create AWS Profile Action",
         description: "Sets up an AWS profile in the file system",
         inputs: {
+            awsConfigDir: {
+                description:
+                    "The directory/folder where the AWS files will be saved",
+                required: false,
+            },
             key: {
                 description: "The AWS_ACCESS_KEY_ID",
                 required: true,
