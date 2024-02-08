@@ -1,19 +1,19 @@
-import fs from "fs";
-import os from "os";
+import * as fs from "fs";
+import * as os from "os";
 
-import core from "@actions/core";
+import { getInput, info, setFailed } from "@actions/core";
 
 const run = async (): Promise<void> => {
     try {
-        const key = core.getInput("key") || "you forgot the key";
-        const secret = core.getInput("secret") || "you forgot the secret";
-        const profile = core.getInput("profile") || "you forgot the profile";
-        const region = core.getInput("region") || "us-whatevs-1";
-        const token = core.getInput("sessionToken");
+        const key = getInput("key") || "you forgot the key";
+        const secret = getInput("secret") || "you forgot the secret";
+        const profile = getInput("profile") || "you forgot the profile";
+        const region = getInput("region") || "us-whatevs-1";
+        const token = getInput("sessionToken");
         const awsConfigDir =
-            core.getInput("aws_config_dir") || `${os.homedir()}/.aws`;
+            getInput("aws_config_dir") || `${os.homedir()}/.aws`;
 
-        core.info(`Setting up profile ${profile} in region ${region}...`);
+        info(`Setting up profile ${profile} in region ${region}...`);
 
         const credentials = `${awsConfigDir}/credentials`;
         const config = `${awsConfigDir}/config`;
@@ -33,7 +33,7 @@ const run = async (): Promise<void> => {
         fs.appendFileSync(config, `[profile ${profile}]\n`);
         fs.appendFileSync(config, `region = ${region}\n`);
     } catch (error) {
-        core.setFailed((error as Error)?.message ?? "Unknown error");
+        setFailed((error as Error)?.message ?? "Unknown error");
     }
 };
 
